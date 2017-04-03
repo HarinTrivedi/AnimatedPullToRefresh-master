@@ -1,0 +1,12 @@
+*.iml
+.DS_Store
+.externalNativeBuild
+/.gradle
+/.idea
+/gradle
+/local.properties
+/build
+/captures
+/app/build
+/AnimatedPullToRefreshLib/build
+

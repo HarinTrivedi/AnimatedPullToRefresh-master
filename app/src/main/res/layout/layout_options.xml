@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_layout"
+            android:minWidth="250dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Header Label"
+                    android:text="@string/str_loading" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Theme" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Light" />
+
+                <RadioButton
+                    android:id="@+id/rbDark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dark" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Speed" />
+
+            <Spinner
+                android:id="@+id/sp_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/anim_speed" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Text Animation" />
+
+            <Spinner
+                android:id="@+id/sp_text_anim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/anim_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Loop Animation" />
+
+            <Spinner
+                android:id="@+id/sp_loop_anim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/anim_loop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Text Animation Iteration" />
+
+            <Spinner
+                android:id="@+id/sp_text_anim_it"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/anim_it" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Loop Animation Iteration" />
+
+            <Spinner
+                android:id="@+id/sp_loop_anim_it"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/anim_it" />
+
+            <Switch
+                android:id="@+id/sw_enable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="true"
+                android:splitTrack="false"
+                android:text="Enable Color Animation" />
+
+            <Button
+                android:id="@+id/btn_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Apply"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</layout>

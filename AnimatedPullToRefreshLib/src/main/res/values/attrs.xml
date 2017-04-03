@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AnimatedPullToRefreshLayout">
+        <attr name="animationSpeed" format="enum">
+            <enum name="fast" value="0" />
+            <enum name="slow" value="1" />
+        </attr>
+        <attr name="headerText" format="string" />
+        <attr name="headerTextSize" format="dimension" />
+        <attr name="headerTextColor" format="color" />
+        <attr name="headerBackgroundColor" format="color" />
+        <!--Animation-->
+        <attr name="headerTextAnimation" format="enum">
+            <enum name="rotateCW" value="0" />
+            <enum name="rotateACW" value="1" />
+            <enum name="fade" value="2" />
+            <enum name="zoom" value="3" />
+        </attr>
+        <attr name="headerLoopAnimation" format="enum">
+            <enum name="zoom" value="0" />
+            <enum name="fade" value="1" />
+        </attr>
+        <attr name="headerTextAnimIteration" format="integer" />
+        <attr name="headerLoopAnimIteration" format="integer" />
+        <attr name="headerTextFontPath" format="string" />
+        <attr name="headerTextColorAnimationEnabled" format="boolean" />
+    </declare-styleable>
+</resources>

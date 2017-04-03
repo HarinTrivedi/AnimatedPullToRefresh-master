@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="headerTextSize">10sp</dimen>
+    <dimen name="headerPaddingTop">10dp</dimen>
+    <dimen name="headerPaddingBottom">10dp</dimen>
+    <dimen name="headerPaddingLeft">5dp</dimen>
+    <dimen name="headerPaddingRight">5dp</dimen>
+
+</resources>
