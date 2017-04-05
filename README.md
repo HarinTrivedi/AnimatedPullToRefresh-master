@@ -1,5 +1,9 @@
 # AnimatedPullToRefresh-master
 
+Please follow wiki page for instructions
+
+<https://github.com/HarinTrivedi/AnimatedPullToRefresh-master/wiki>
+
 ## Demo
 * Simple demo 1
 
