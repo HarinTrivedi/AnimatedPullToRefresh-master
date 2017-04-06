@@ -26,6 +26,7 @@ Please follow wiki page for instructions
 ![Customize animation iteration](http://i.imgur.com/h3pI43s.gif)
 
 ***
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/HarinTrivedi/)
 
 ## LICENSE
 ````
