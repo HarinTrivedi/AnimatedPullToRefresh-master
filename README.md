@@ -27,6 +27,8 @@ Please follow wiki page for instructions
 
 ***
 
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/HarinTrivedi/)
+
 ## LICENSE
 ````
 Copyright 2017 Harry's Lab
