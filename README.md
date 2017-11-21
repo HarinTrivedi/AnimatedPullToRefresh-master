@@ -4,6 +4,15 @@ Please follow wiki page for instructions
 
 <https://github.com/HarinTrivedi/AnimatedPullToRefresh-master/wiki>
 
+gradle library dependency:
+
+  ````com.hlab.animatedPullToRefresh:animated-pull-to-refresh-layout:1.0.1````
+
+[ ![Download](https://api.bintray.com/packages/harintrivedi/AnimatedPullToRefreshLayout/com.hlab.animatedPullToRefresh/images/download.svg) ](https://bintray.com/harintrivedi/AnimatedPullToRefreshLayout/com.hlab.animatedPullToRefresh/_latestVersion)
+
+## What's new
+* New font support - fontFamily
+
 ## Demo
 * Simple demo 1
 
