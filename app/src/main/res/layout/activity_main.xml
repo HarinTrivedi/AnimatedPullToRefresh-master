@@ -17,8 +17,8 @@
         app:headerTextAnimation="rotateCW"
         app:headerTextColor="@color/colorLabelDark"
         app:headerTextColorAnimationEnabled="true"
-        app:headerTextFontPath="font/Lobster.otf"
-        app:headerTextSize="18sp">
+        app:headerTextFontFamily="@font/lobster"
+        app:headerTextSize="14sp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

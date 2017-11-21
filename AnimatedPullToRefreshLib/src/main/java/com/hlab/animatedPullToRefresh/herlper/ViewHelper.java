@@ -25,7 +25,7 @@ public class ViewHelper {
     private int headerTextColor;
     private int headerPaddingTop;
     private int headerPaddingBottom;
-    private String headerTextFontPath;
+    private Typeface mTitleTypeface;
 
     public ViewHelper(Context context) {
         this.context = context;
@@ -58,10 +58,8 @@ public class ViewHelper {
         textView.setTextColor(headerTextColor);
         textView.setLayoutParams(tvParams);
         textView.setTextSize(headerTextSize);
-        if (headerTextFontPath != null) {
-            final Typeface font = Typeface.createFromAsset(context.getResources().getAssets(), headerTextFontPath);
-            textView.setTypeface(font);
-        }
+        if (mTitleTypeface != null)
+            textView.setTypeface(mTitleTypeface);
         return textView;
     }
 
@@ -113,11 +111,7 @@ public class ViewHelper {
         this.headerPaddingBottom = headerPaddingBottom;
     }
 
-    public String getHeaderTextFontPath() {
-        return headerTextFontPath;
-    }
-
-    public void setHeaderTextFontPath(String headerTextFontPath) {
-        this.headerTextFontPath = headerTextFontPath;
+    public void setHeaderTextTypeface(Typeface mTitleTypeface) {
+        this.mTitleTypeface = mTitleTypeface;
     }
 }

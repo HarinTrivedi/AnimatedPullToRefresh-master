@@ -1,6 +1,7 @@
 package com.hlab.animatedPullToRefresh;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -118,16 +119,21 @@ class CharacterAnimatorHeaderView extends LinearLayout implements AnimatedPullTo
             return;
         }
 
-        if (headerState == HeaderState.HEADER_STATE_NORMAL) {
+        switch (headerState) {
+            case HEADER_STATE_NORMAL:
 //                if (lastStateCode == AnimatedPullToRefreshLayout.HeaderState.HEADER_STATE_READY) {
 //                }
 //                if (lastStateCode == AnimatedPullToRefreshLayout.HeaderState.HEADER_STATE_REFRESHING) {
 //                }
-        } else if (headerState == HeaderState.HEADER_STATE_READY) {
-        } else if (headerState == HeaderState.HEADER_STATE_REFRESHING) {
-            mLoopHandler.post(mLoopRunnable);
-        } else if (headerState == HeaderState.HEADER_STATE_COMPLETE) {
-            mLoopHandler.removeCallbacks(mLoopRunnable);
+                break;
+            case HEADER_STATE_READY:
+                break;
+            case HEADER_STATE_REFRESHING:
+                mLoopHandler.post(mLoopRunnable);
+                break;
+            case HEADER_STATE_COMPLETE:
+                mLoopHandler.removeCallbacks(mLoopRunnable);
+                break;
         }
     }
 
@@ -209,15 +215,6 @@ class CharacterAnimatorHeaderView extends LinearLayout implements AnimatedPullTo
     }
 
     /**
-     * Set character custom font path
-     */
-    public void setHeaderTextFontPath(String headerTextFontPath) {
-        viewHelper.setHeaderTextFontPath(headerTextFontPath);
-        if (isInitialized)
-            initView();
-    }
-
-    /**
      * Enable / Disable color animation
      */
     public void setColorAnimEnable(boolean colorAnimEnable) {
@@ -229,5 +226,16 @@ class CharacterAnimatorHeaderView extends LinearLayout implements AnimatedPullTo
      */
     public void setAnimationSpeed(HeaderAnimSpeed animationSpeed) {
         animationHelper.setAnimationSpeed(animationSpeed);
+    }
+
+    /**
+     * Set custom font typeface
+     */
+    public void setHeaderTextTypeface(Typeface mTitleTypeface) {
+        if (mTitleTypeface != null) {
+            viewHelper.setHeaderTextTypeface(mTitleTypeface);
+            if (isInitialized)
+                initView();
+        }
     }
 }

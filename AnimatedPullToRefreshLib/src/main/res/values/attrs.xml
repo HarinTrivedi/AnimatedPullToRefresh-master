@@ -22,7 +22,8 @@
         </attr>
         <attr name="headerTextAnimIteration" format="integer" />
         <attr name="headerLoopAnimIteration" format="integer" />
-        <attr name="headerTextFontPath" format="string" />
         <attr name="headerTextColorAnimationEnabled" format="boolean" />
+
+        <attr name="headerTextFontFamily" format="reference" />
     </declare-styleable>
 </resources>

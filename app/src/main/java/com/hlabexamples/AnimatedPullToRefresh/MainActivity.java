@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity implements AnimatedPullToRef
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ListAdapter(this));
 
-        mPullToRefreshLayout = (AnimatedPullToRefreshLayout) findViewById(R.id.pullToRefreshLayout);
+        mPullToRefreshLayout = findViewById(R.id.pullToRefreshLayout);
         mPullToRefreshLayout.setColorAnimationArray(new int[]{Color.CYAN, Color.RED, Color.YELLOW, Color.MAGENTA});
         mPullToRefreshLayout.setOnRefreshListener(this);
 
@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements AnimatedPullToRef
         https://github.com/HarinTrivedi/FABRevealMenu-master
         */
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fabMenu = (FABRevealMenu) findViewById(R.id.fabMenu);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fabMenu = findViewById(R.id.fabMenu);
         fabMenu.bindAncherView(fab);
         fabMenu.setCustomView(addCustomView());
     }
@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements AnimatedPullToRef
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

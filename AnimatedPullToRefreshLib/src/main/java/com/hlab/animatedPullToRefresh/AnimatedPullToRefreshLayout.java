@@ -1,9 +1,12 @@
 package com.hlab.animatedPullToRefresh;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -34,9 +37,13 @@ import static com.hlab.animatedPullToRefresh.herlper.Constants.SWIPE_REFRESH_TRI
  */
 public class AnimatedPullToRefreshLayout extends ViewGroup {
 
+    private final Animation mAnimateStayComplete = new Animation() {
+        @Override
+        public void applyTransformation(float interpolatedTime, Transformation t) {
+        }
+    };
     private HeaderState currentHeaderState = HeaderState.HEADER_STATE_NORMAL;
     private HeaderState lastHeaderState = HeaderState.HEADER_STATE_DEFAULT;
-
     private int mTargetOriginalTop;
     private int mFrom;
     private int mTouchSlop;
@@ -44,19 +51,92 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
     private int mCurrentTargetOffsetTop = 0;
     private float mPrevY;
     private int mTriggerOffset = 0;
-
     private boolean mInReturningAnimation;
+    private final AnimationListener mReturningAnimationListener = new AnimationListener() {
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            // Once the target content has returned to its start position, reset
+            // the target offset to 0
+            // mCurrentTargetOffsetTop = 0;
+            mInReturningAnimation = false;
+        }
+    };
     private boolean mRefreshing = false;
     private boolean isHorizontalScroll;
     private boolean mCheckValidMotionFlag = true;
-
     private OnRefreshListener mListener;
     private MotionEvent mDownEvent;
     private RefreshCheckHandler mRefreshCheckHandler;
     private ScrollUpHandler mScrollUpHandler;
-
     private View mHeadview;
     private View mTarget = null;
+    private final Runnable mStayRefreshCompletePosition = new Runnable() {
+        @Override
+        public void run() {
+            animateStayComplete(mStayCompleteListener);
+        }
+    };
+    private final Animation mAnimateToStartPosition = new Animation() {
+        @Override
+        public void applyTransformation(float interpolatedTime, Transformation t) {
+            int targetTop = mTargetOriginalTop;
+            if (mFrom != mTargetOriginalTop) {
+                targetTop = (mFrom + (int) ((mTargetOriginalTop - mFrom) * interpolatedTime));
+            }
+            int offset = targetTop - mTarget.getTop();
+            final int currentTop = mTarget.getTop();
+            if (offset + currentTop < 0) {
+                offset = 0 - currentTop;
+            }
+            setTargetOffsetTop(offset, true);
+        }
+    };
+    private final Runnable mReturnToStartPosition = new Runnable() {
+        @Override
+        public void run() {
+            mInReturningAnimation = true;
+            animateOffsetToStartPosition(mTarget.getTop(), mReturningAnimationListener);
+        }
+    };
+    private final AnimationListener mStayCompleteListener = new AnimationListener() {
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mReturnToStartPosition.run();
+            mRefreshing = false;
+        }
+    };
+    // Cancel the refresh gesture and animate everything back to its original state.
+    private final Runnable mCancel = new Runnable() {
+        @Override
+        public void run() {
+            mInReturningAnimation = true;
+            // Timeout fired since the user last moved their finger; animate the
+            // trigger to 0 and put the target back at its original position
+            animateOffsetToStartPosition(mTarget.getTop(), mReturningAnimationListener);
+        }
+    };
+    private final Animation mAnimateToTriggerPosition = new Animation() {
+        @Override
+        public void applyTransformation(float interpolatedTime, Transformation t) {
+            int targetTop = mDistanceToTriggerSync;
+            if (mFrom > mDistanceToTriggerSync) {
+                targetTop = (mFrom + (int) ((mDistanceToTriggerSync - mFrom) * interpolatedTime));
+            }
+            int offset = targetTop - mTarget.getTop();
+            final int currentTop = mTarget.getTop();
+            if (offset + currentTop < 0) {
+                offset = 0 - currentTop;
+            }
+            setTargetOffsetTop(offset, true);
+        }
+    };
+    private final Runnable mReturnToTrigerPosition = new Runnable() {
+        @Override
+        public void run() {
+            mInReturningAnimation = true;
+            animateOffsetToTrigerPosition(mTarget.getTop(), mReturningAnimationListener);
+        }
+    };
     private CharacterAnimatorHeaderView headerView;
 
     public AnimatedPullToRefreshLayout(Context context) {
@@ -75,7 +155,6 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AnimatedPullToRefreshLayout);
         if (a != null) {
             String headerText = a.getString(R.styleable.AnimatedPullToRefreshLayout_headerText);
-            String headerTextFontPath = a.getString(R.styleable.AnimatedPullToRefreshLayout_headerTextFontPath);
             int headerTextSize = a.getDimensionPixelSize(R.styleable.AnimatedPullToRefreshLayout_headerTextSize, (int) getResources().getDimension(R.dimen.headerTextSize));
             int headerTextColor = a.getColor(R.styleable.AnimatedPullToRefreshLayout_headerTextColor, getColor(android.R.color.darker_gray));
             int headerBackgroundColor = a.getColor(R.styleable.AnimatedPullToRefreshLayout_headerBackgroundColor, getColor(android.R.color.transparent));
@@ -85,6 +164,14 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
             int headerTextAnimIteration = a.getInt(R.styleable.AnimatedPullToRefreshLayout_headerTextAnimIteration, HeaderTextAnim.ROTATE_CW.getAnimType());
             int headerLoopAnimIteration = a.getInt(R.styleable.AnimatedPullToRefreshLayout_headerLoopAnimIteration, HeaderLoopAnim.ZOOM.getAnimType());
             boolean isColorAnimEnabled = a.getBoolean(R.styleable.AnimatedPullToRefreshLayout_headerTextColorAnimationEnabled, true);
+            Typeface mTitleTypeface = null;
+            //Font
+            if (a.hasValue(R.styleable.AnimatedPullToRefreshLayout_headerTextFontFamily)) {
+                int fontId = a.getResourceId(R.styleable.AnimatedPullToRefreshLayout_headerTextFontFamily, -1);
+                if (fontId != -1)
+                    mTitleTypeface = ResourcesCompat.getFont(context, fontId);
+            }
+
             a.recycle();
 
             if (isInEditMode())
@@ -100,9 +187,9 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
             headerView.setHeaderLoopAnim(headerLoopAnim);
             headerView.setHeaderTextAnimIteration(headerTextAnimIteration);
             headerView.setHeaderLoopAnimIteration(headerLoopAnimIteration);
-            headerView.setHeaderTextFontPath(headerTextFontPath);
             headerView.setColorAnimEnable(isColorAnimEnabled);
             headerView.setAnimationSpeed(headerAnimSpeed);
+            headerView.setHeaderTextTypeface(mTitleTypeface);
 
             setHeaderView(headerView);
         }
@@ -322,7 +409,6 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         }
     }
 
-
     @Override
     protected boolean checkLayoutParams(LayoutParams p) {
         return p instanceof MarginLayoutParams;
@@ -424,6 +510,7 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
     public void requestDisallowInterceptTouchEvent(boolean b) {
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
@@ -531,7 +618,6 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
             mHeadview.offsetTopAndBottom(offset);
             mCurrentTargetOffsetTop += offset;
 
-            //todo : imp
             mHeadview.getLayoutParams().height = (int) (mHeadview.getMeasuredHeight() + offset * 0.8f);
             mHeadview.requestLayout();
 
@@ -547,97 +633,6 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         postDelayed(mCancel, isDelayed ? RETURN_DURATION : 0);
     }
 
-    private final Animation mAnimateStayComplete = new Animation() {
-        @Override
-        public void applyTransformation(float interpolatedTime, Transformation t) {
-        }
-    };
-
-    private final AnimationListener mReturningAnimationListener = new AnimationListener() {
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            // Once the target content has returned to its start position, reset
-            // the target offset to 0
-            // mCurrentTargetOffsetTop = 0;
-            mInReturningAnimation = false;
-        }
-    };
-
-
-    private final Runnable mReturnToTrigerPosition = new Runnable() {
-        @Override
-        public void run() {
-            mInReturningAnimation = true;
-            animateOffsetToTrigerPosition(mTarget.getTop(), mReturningAnimationListener);
-        }
-    };
-
-    private final Runnable mReturnToStartPosition = new Runnable() {
-        @Override
-        public void run() {
-            mInReturningAnimation = true;
-            animateOffsetToStartPosition(mTarget.getTop(), mReturningAnimationListener);
-        }
-    };
-
-    private final AnimationListener mStayCompleteListener = new AnimationListener() {
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mReturnToStartPosition.run();
-            mRefreshing = false;
-        }
-    };
-
-    private final Runnable mStayRefreshCompletePosition = new Runnable() {
-        @Override
-        public void run() {
-            animateStayComplete(mStayCompleteListener);
-        }
-    };
-
-    // Cancel the refresh gesture and animate everything back to its original state.
-    private final Runnable mCancel = new Runnable() {
-        @Override
-        public void run() {
-            mInReturningAnimation = true;
-            // Timeout fired since the user last moved their finger; animate the
-            // trigger to 0 and put the target back at its original position
-            animateOffsetToStartPosition(mTarget.getTop(), mReturningAnimationListener);
-        }
-    };
-
-    private final Animation mAnimateToStartPosition = new Animation() {
-        @Override
-        public void applyTransformation(float interpolatedTime, Transformation t) {
-            int targetTop = mTargetOriginalTop;
-            if (mFrom != mTargetOriginalTop) {
-                targetTop = (mFrom + (int) ((mTargetOriginalTop - mFrom) * interpolatedTime));
-            }
-            int offset = targetTop - mTarget.getTop();
-            final int currentTop = mTarget.getTop();
-            if (offset + currentTop < 0) {
-                offset = 0 - currentTop;
-            }
-            setTargetOffsetTop(offset, true);
-        }
-    };
-
-    private final Animation mAnimateToTriggerPosition = new Animation() {
-        @Override
-        public void applyTransformation(float interpolatedTime, Transformation t) {
-            int targetTop = mDistanceToTriggerSync;
-            if (mFrom > mDistanceToTriggerSync) {
-                targetTop = (mFrom + (int) ((mDistanceToTriggerSync - mFrom) * interpolatedTime));
-            }
-            int offset = targetTop - mTarget.getTop();
-            final int currentTop = mTarget.getTop();
-            if (offset + currentTop < 0) {
-                offset = 0 - currentTop;
-            }
-            setTargetOffsetTop(offset, true);
-        }
-    };
-
     @SuppressWarnings("deprecation")
     private int getColor(int colorResId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -645,32 +640,6 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         else
             getResources().getColor(colorResId);
         return colorResId;
-    }
-
-    /**
-     * Classes that wish to be notified when the swipe gesture correctly
-     * triggers a refresh should implement this interface.
-     */
-    public interface OnRefreshListener {
-        void onRefresh();
-    }
-
-    /**
-     * Classes that checking whether refresh can be triggered
-     */
-    interface RefreshCheckHandler {
-        boolean canRefresh();
-    }
-
-    interface ScrollUpHandler {
-        boolean canScrollUp(View view);
-    }
-
-    /**
-     * Classes that must be implemented by for custom header view
-     */
-    interface AnimatedPullToRefreshHeaderLayout {
-        void onStateChange(HeaderState currentHeaderState, HeaderState lastHeaderState);
     }
 
     public void setColorAnimationArray(int[] colorAnimationArray) {
@@ -706,20 +675,6 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         }
     }
 
-//    public void setHeaderPaddingTop(int headerPaddingTop) {
-//        if (headerView != null) {
-//            headerView.setHeaderPaddingTop(headerPaddingTop);
-//            headerView.invalidate();
-//        }
-//    }
-//
-//    public void setHeaderPaddingBottom(int headerPaddingBottom) {
-//        if (headerView != null) {
-//            headerView.setHeaderPaddingBottom(headerPaddingBottom);
-//            headerView.invalidate();
-//        }
-//    }
-
     public void setHeaderTextAnim(HeaderTextAnim headerTextAnim) {
         if (headerView != null) {
             headerView.setHeaderTextAnim(headerTextAnim);
@@ -748,6 +703,20 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         }
     }
 
+//    public void setHeaderPaddingTop(int headerPaddingTop) {
+//        if (headerView != null) {
+//            headerView.setHeaderPaddingTop(headerPaddingTop);
+//            headerView.invalidate();
+//        }
+//    }
+//
+//    public void setHeaderPaddingBottom(int headerPaddingBottom) {
+//        if (headerView != null) {
+//            headerView.setHeaderPaddingBottom(headerPaddingBottom);
+//            headerView.invalidate();
+//        }
+//    }
+
     public void setColorAnimEnable(boolean colorAnimEnable) {
         if (headerView != null) {
             headerView.setColorAnimEnable(colorAnimEnable);
@@ -762,4 +731,36 @@ public class AnimatedPullToRefreshLayout extends ViewGroup {
         }
     }
 
+    public void setHeaderTextTypeface(Typeface mTitleTypeface) {
+        if (headerView != null) {
+            headerView.setHeaderTextTypeface(mTitleTypeface);
+            headerView.invalidate();
+        }
+    }
+
+    /**
+     * Classes that wish to be notified when the swipe gesture correctly
+     * triggers a refresh should implement this interface.
+     */
+    public interface OnRefreshListener {
+        void onRefresh();
+    }
+
+    /**
+     * Classes that checking whether refresh can be triggered
+     */
+    interface RefreshCheckHandler {
+        boolean canRefresh();
+    }
+
+    interface ScrollUpHandler {
+        boolean canScrollUp(View view);
+    }
+
+    /**
+     * Classes that must be implemented by for custom header view
+     */
+    interface AnimatedPullToRefreshHeaderLayout {
+        void onStateChange(HeaderState currentHeaderState, HeaderState lastHeaderState);
+    }
 }
