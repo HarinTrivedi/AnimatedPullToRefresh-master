@@ -48,7 +48,7 @@ Step 2. Add the dependency
 
 ````
 	dependencies {
-	        implementation 'com.github.HarinTrivedi:AnimatedPullToRefresh-master:1.0.2'
+	        implementation 'com.github.HarinTrivedi:AnimatedPullToRefresh-master:1.0.4'
 	}
 ````
 
