@@ -3,12 +3,10 @@
 An simple general purpose UI library to add pull to refresh functionality with cool header text animation, which provides different customizations which allows to change header text, animation, color animation etc. Choose combination of your choice and rock your app screen.
 ***
 
-## Features
- * Supports api level 15(Ice-cream Sandwich) and above.
+## Feature
  * Easy integration
  * Easy customisation
  * Allows to customise text color, background color, animations etc of your choice.
-
 ***
 
 ## Demo
