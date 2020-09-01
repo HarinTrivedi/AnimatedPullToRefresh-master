@@ -1,15 +1,15 @@
-package com.hlab.animatedPullToRefresh.enums;
+package com.hlab.animatedpulltorefresh.enums;
 
 /**
  * Created in Android_animated_pull_to_refresh_control-master on 22/03/17.
  */
 
-public enum HeaderLoopAnim {
-    ZOOM(0), FADE(1);
+public enum HeaderTextAnim {
+    ROTATE_CW(0), ROTATE_ACW(1), FADE(2), ZOOM(3);
 
     private int animType;
 
-    HeaderLoopAnim(int type) {
+    HeaderTextAnim(int type) {
         animType = type;
     }
 
@@ -17,8 +17,8 @@ public enum HeaderLoopAnim {
         return animType;
     }
 
-    public static HeaderLoopAnim fromId(int id) {
-        for (HeaderLoopAnim f : values()) {
+    public static HeaderTextAnim fromId(int id) {
+        for (HeaderTextAnim f : values()) {
             if (f.animType == id) return f;
         }
         throw new IllegalArgumentException();

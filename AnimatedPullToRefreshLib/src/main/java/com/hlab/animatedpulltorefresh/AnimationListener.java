@@ -1,4 +1,4 @@
-package com.hlab.animatedPullToRefresh;
+package com.hlab.animatedpulltorefresh;
 
 import android.view.animation.Animation;
 

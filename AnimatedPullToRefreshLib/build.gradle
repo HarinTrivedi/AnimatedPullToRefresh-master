@@ -1,13 +1,16 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
 
+group='com.github.hlab'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0.0"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 2
+        versionName "1.0.2"
 
     }
     buildTypes {
@@ -21,21 +24,21 @@ android {
             abortOnError false
         }
     }
-
-
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:26.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 
 ext {
     PUBLISH_GROUP_ID = 'com.hlab.animatedPullToRefresh'
     PUBLISH_ARTIFACT_ID = 'animated-pull-to-refresh-layout'
-    PUBLISH_VERSION = '1.0.1'
+    PUBLISH_VERSION = '1.0.2'
 }
-
-
-apply from: '../android-release-aar.gradle'
+repositories {
+    mavenCentral()
+}

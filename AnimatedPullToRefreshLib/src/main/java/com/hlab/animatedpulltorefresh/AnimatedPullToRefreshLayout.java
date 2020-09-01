@@ -1,4 +1,4 @@
-package com.hlab.animatedPullToRefresh;
+package com.hlab.animatedpulltorefresh;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,8 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -17,18 +15,21 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-import com.hlab.animatedPullToRefresh.enums.HeaderAnimSpeed;
-import com.hlab.animatedPullToRefresh.enums.HeaderLoopAnim;
-import com.hlab.animatedPullToRefresh.enums.HeaderState;
-import com.hlab.animatedPullToRefresh.enums.HeaderTextAnim;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
 
-import static com.hlab.animatedPullToRefresh.herlper.Constants.MAX_SWIPE_DISTANCE_FACTOR;
-import static com.hlab.animatedPullToRefresh.herlper.Constants.REFRESH_COMPLETE_DURATION;
-import static com.hlab.animatedPullToRefresh.herlper.Constants.RESISTANCE_FACTOR;
-import static com.hlab.animatedPullToRefresh.herlper.Constants.RETURN_DURATION;
-import static com.hlab.animatedPullToRefresh.herlper.Constants.RETURN_TO_HEADER_DURATION;
-import static com.hlab.animatedPullToRefresh.herlper.Constants.RETURN_TO_TOP_DURATION;
-import static com.hlab.animatedPullToRefresh.herlper.Constants.SWIPE_REFRESH_TRIGGER_DISTANCE;
+import com.hlab.animatedpulltorefresh.enums.HeaderAnimSpeed;
+import com.hlab.animatedpulltorefresh.enums.HeaderLoopAnim;
+import com.hlab.animatedpulltorefresh.enums.HeaderState;
+import com.hlab.animatedpulltorefresh.enums.HeaderTextAnim;
+
+import static com.hlab.animatedpulltorefresh.herlper.Constants.MAX_SWIPE_DISTANCE_FACTOR;
+import static com.hlab.animatedpulltorefresh.herlper.Constants.REFRESH_COMPLETE_DURATION;
+import static com.hlab.animatedpulltorefresh.herlper.Constants.RESISTANCE_FACTOR;
+import static com.hlab.animatedpulltorefresh.herlper.Constants.RETURN_DURATION;
+import static com.hlab.animatedpulltorefresh.herlper.Constants.RETURN_TO_HEADER_DURATION;
+import static com.hlab.animatedpulltorefresh.herlper.Constants.RETURN_TO_TOP_DURATION;
+import static com.hlab.animatedpulltorefresh.herlper.Constants.SWIPE_REFRESH_TRIGGER_DISTANCE;
 
 /**
  * AnimatedPullToRefreshLayout

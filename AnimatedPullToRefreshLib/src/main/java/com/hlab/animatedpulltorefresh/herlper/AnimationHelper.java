@@ -1,11 +1,10 @@
-package com.hlab.animatedPullToRefresh.herlper;
+package com.hlab.animatedpulltorefresh.herlper;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -14,9 +13,11 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
-import com.hlab.animatedPullToRefresh.enums.HeaderAnimSpeed;
-import com.hlab.animatedPullToRefresh.enums.HeaderLoopAnim;
-import com.hlab.animatedPullToRefresh.enums.HeaderTextAnim;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+
+import com.hlab.animatedpulltorefresh.enums.HeaderAnimSpeed;
+import com.hlab.animatedpulltorefresh.enums.HeaderLoopAnim;
+import com.hlab.animatedpulltorefresh.enums.HeaderTextAnim;
 
 import java.util.List;
 

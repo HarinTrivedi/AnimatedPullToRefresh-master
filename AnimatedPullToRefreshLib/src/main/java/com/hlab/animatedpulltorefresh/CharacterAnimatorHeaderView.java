@@ -1,20 +1,21 @@
-package com.hlab.animatedPullToRefresh;
+package com.hlab.animatedpulltorefresh;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hlab.animatedPullToRefresh.enums.HeaderAnimSpeed;
-import com.hlab.animatedPullToRefresh.enums.HeaderLoopAnim;
-import com.hlab.animatedPullToRefresh.enums.HeaderState;
-import com.hlab.animatedPullToRefresh.enums.HeaderTextAnim;
-import com.hlab.animatedPullToRefresh.herlper.AnimationHelper;
-import com.hlab.animatedPullToRefresh.herlper.ViewHelper;
+import androidx.annotation.Nullable;
+
+import com.hlab.animatedpulltorefresh.enums.HeaderAnimSpeed;
+import com.hlab.animatedpulltorefresh.enums.HeaderLoopAnim;
+import com.hlab.animatedpulltorefresh.enums.HeaderState;
+import com.hlab.animatedpulltorefresh.enums.HeaderTextAnim;
+import com.hlab.animatedpulltorefresh.herlper.AnimationHelper;
+import com.hlab.animatedpulltorefresh.herlper.ViewHelper;
 
 import java.util.List;
 

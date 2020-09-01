@@ -1,4 +1,4 @@
-package com.hlab.animatedPullToRefresh.herlper;
+package com.hlab.animatedpulltorefresh.herlper;
 
 public class Constants {
 

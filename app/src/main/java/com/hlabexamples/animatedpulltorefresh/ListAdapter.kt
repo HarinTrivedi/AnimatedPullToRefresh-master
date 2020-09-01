@@ -1,55 +1,41 @@
-package com.hlabexamples.AnimatedPullToRefresh;
+package com.hlabexamples.animatedpulltorefresh
 
-import android.content.Context;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context
+import android.graphics.Color
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 /**
  * Created in Android_animated_pull_to_refresh_control-master on 23/03/17.
  */
+class ItemListAdapter(private val context: Context) : RecyclerView.Adapter<ItemListAdapter.ItemViewHolder?>() {
+  private var items: MutableList<String> = ArrayList()
+  private var inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
-
-    private LayoutInflater inflater;
-    private List<String> items;
-
-    ListAdapter(Context context) {
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        items = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            items.add("List Item " + (i + 1));
-        }
+  init {
+    for (i in 0..19) {
+      items.add("List Item " + (i + 1))
     }
+  }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(inflater.inflate(android.R.layout.simple_list_item_1, parent, false));
-    }
+  override fun getItemCount(): Int {
+    return items.size
+  }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv.setTextColor(Color.BLACK);
-        holder.tv.setText(items.get(position));
-    }
+  class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    var tv: TextView? = itemView.findViewById<View?>(android.R.id.text1) as TextView
+  }
 
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+    return ItemViewHolder(inflater.inflate(android.R.layout.simple_list_item_1, parent, false))
+  }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tv;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            tv = (TextView) itemView.findViewById(android.R.id.text1);
-        }
-    }
+  override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    holder.tv?.setTextColor(Color.BLACK)
+    holder.tv?.text = items.get(position)
+  }
 }

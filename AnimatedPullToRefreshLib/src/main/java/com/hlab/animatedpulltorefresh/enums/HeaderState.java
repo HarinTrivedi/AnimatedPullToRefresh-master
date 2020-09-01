@@ -1,4 +1,4 @@
-package com.hlab.animatedPullToRefresh.enums;
+package com.hlab.animatedpulltorefresh.enums;
 
 public enum HeaderState {
     HEADER_STATE_DEFAULT(-1),

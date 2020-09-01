@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.hlabexamples.AnimatedPullToRefresh"
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -24,15 +25,20 @@ android {
             abortOnError false
         }
     }
-
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:26.1.0'
-    compile ('com.hlab.fabrevealmenu:fab-reveal-menu:1.0.2') {
-        exclude group: ['support-v4','support-design']
-    }
-    compile project(':AnimatedPullToRefreshLib')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.github.HarinTrivedi:FABRevealMenu-master:2.0.0'
+    implementation project(':AnimatedPullToRefreshLib')
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

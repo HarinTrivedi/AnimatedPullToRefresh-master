@@ -1,4 +1,4 @@
-package com.hlab.animatedPullToRefresh.herlper;
+package com.hlab.animatedpulltorefresh.herlper;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -6,7 +6,7 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hlab.animatedPullToRefresh.R;
+import com.hlab.animatedpulltorefresh.R;
 
 import java.util.ArrayList;
 import java.util.List;

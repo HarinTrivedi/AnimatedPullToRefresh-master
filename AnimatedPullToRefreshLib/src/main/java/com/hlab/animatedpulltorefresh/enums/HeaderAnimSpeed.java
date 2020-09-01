@@ -1,4 +1,4 @@
-package com.hlab.animatedPullToRefresh.enums;
+package com.hlab.animatedpulltorefresh.enums;
 
 /**
  * Created in Android_animated_pull_to_refresh_control-master on 22/03/17.

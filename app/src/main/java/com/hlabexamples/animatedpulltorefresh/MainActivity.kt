@@ -1,146 +1,106 @@
-package com.hlabexamples.AnimatedPullToRefresh;
+package com.hlabexamples.animatedpulltorefresh
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.graphics.Color
+import android.os.Bundle
+import android.os.Handler
+import android.view.LayoutInflater
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.hlab.animatedpulltorefresh.AnimatedPullToRefreshLayout
+import com.hlab.animatedpulltorefresh.AnimatedPullToRefreshLayout.OnRefreshListener
+import com.hlab.animatedpulltorefresh.enums.HeaderAnimSpeed
+import com.hlab.animatedpulltorefresh.enums.HeaderLoopAnim
+import com.hlab.animatedpulltorefresh.enums.HeaderTextAnim
+import com.hlab.fabrevealmenu.view.FABRevealMenu
+import com.hlabexamples.animatedpulltorefresh.databinding.LayoutOptionsBinding
 
-import com.hlab.animatedPullToRefresh.AnimatedPullToRefreshLayout;
-import com.hlab.animatedPullToRefresh.enums.HeaderAnimSpeed;
-import com.hlab.animatedPullToRefresh.enums.HeaderLoopAnim;
-import com.hlab.animatedPullToRefresh.enums.HeaderTextAnim;
-import com.hlab.fabrevealmenu.view.FABRevealMenu;
-import com.hlabexamples.AnimatedPullToRefresh.databinding.LayoutOptionsBinding;
+class MainActivity : AppCompatActivity(), OnRefreshListener {
+  private lateinit var fabMenu: FABRevealMenu
+  private lateinit var mPullToRefreshLayout: AnimatedPullToRefreshLayout
+  private lateinit var menuBinding: LayoutOptionsBinding
 
-public class MainActivity extends AppCompatActivity implements AnimatedPullToRefreshLayout.OnRefreshListener {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    val recyclerView = findViewById<RecyclerView?>(R.id.recyclerView)
+    recyclerView.layoutManager = LinearLayoutManager(this)
+    recyclerView.adapter = ItemListAdapter(this)
+    mPullToRefreshLayout = findViewById(R.id.pullToRefreshLayout)
+    mPullToRefreshLayout.setColorAnimationArray(intArrayOf(Color.CYAN, Color.RED, Color.YELLOW, Color.MAGENTA))
+    mPullToRefreshLayout.setOnRefreshListener(this)
 
-    private FABRevealMenu fabMenu;
-    private AnimatedPullToRefreshLayout mPullToRefreshLayout;
-    private LayoutOptionsBinding menuBinding;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ListAdapter(this));
-
-        mPullToRefreshLayout = findViewById(R.id.pullToRefreshLayout);
-        mPullToRefreshLayout.setColorAnimationArray(new int[]{Color.CYAN, Color.RED, Color.YELLOW, Color.MAGENTA});
-        mPullToRefreshLayout.setOnRefreshListener(this);
-
-        /*
+    /*
         For FABRevealMenu checkout here:
         https://github.com/HarinTrivedi/FABRevealMenu-master
         */
+    val fab = findViewById<FloatingActionButton?>(R.id.fab)
+    fabMenu = findViewById(R.id.fabMenu)
+    fabMenu.bindAnchorView(fab)
+    fabMenu.customView = addCustomView()
+  }
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fabMenu = findViewById(R.id.fabMenu);
-        fabMenu.bindAncherView(fab);
-        fabMenu.setCustomView(addCustomView());
+  private fun addCustomView(): View {
+    menuBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.layout_options, findViewById(R.id.parent), false)
+    menuBinding.btnApply.setOnClickListener {
+      configurePullToRefreshView()
+      hideKeyboard()
+      fabMenu.closeMenu()
     }
+    return menuBinding.root
+  }
 
-    private View addCustomView() {
-        menuBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_options, (ViewGroup) findViewById(R.id.parent), false);
+  override fun onRefresh() {
+    //todo: do something here when it starts to refresh
+    Handler().postDelayed({ mPullToRefreshLayout.refreshComplete() }, 6000)
+  }
 
-        menuBinding.btnApply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                configurePullToRefreshView();
-                hideKeyboard();
-                fabMenu.closeMenu();
-            }
-        });
-
-        return menuBinding.getRoot();
+  private fun configurePullToRefreshView() {
+    mPullToRefreshLayout.setHeaderTextAnimIteration(menuBinding.spTextAnimIt.selectedItemPosition + 1)
+    mPullToRefreshLayout.setHeaderLoopAnimIteration(menuBinding.spLoopAnimIt.selectedItemPosition + 1)
+    when (menuBinding.spSpeed.selectedItemPosition) {
+      0 -> mPullToRefreshLayout.setAnimationSpeed(HeaderAnimSpeed.FAST)
+      1 -> mPullToRefreshLayout.setAnimationSpeed(HeaderAnimSpeed.SLOW)
     }
-
-    @Override
-    public void onRefresh() {
-        //todo: do something here when it starts to refresh
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPullToRefreshLayout.refreshComplete();
-            }
-        }, 6000);
+    when (menuBinding.spTextAnim.selectedItemPosition) {
+      0 -> mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.ROTATE_CW)
+      1 -> mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.ROTATE_ACW)
+      2 -> mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.FADE)
+      3 -> mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.ZOOM)
     }
-
-    private void configurePullToRefreshView() {
-        mPullToRefreshLayout.setHeaderTextAnimIteration(menuBinding.spTextAnimIt.getSelectedItemPosition() + 1);
-        mPullToRefreshLayout.setHeaderLoopAnimIteration(menuBinding.spLoopAnimIt.getSelectedItemPosition() + 1);
-
-        switch (menuBinding.spSpeed.getSelectedItemPosition()) {
-            case 0:
-                mPullToRefreshLayout.setAnimationSpeed(HeaderAnimSpeed.FAST);
-                break;
-            case 1:
-                mPullToRefreshLayout.setAnimationSpeed(HeaderAnimSpeed.SLOW);
-                break;
-        }
-
-        switch (menuBinding.spTextAnim.getSelectedItemPosition()) {
-            case 0:
-                mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.ROTATE_CW);
-                break;
-            case 1:
-                mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.ROTATE_ACW);
-                break;
-            case 2:
-                mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.FADE);
-                break;
-            case 3:
-                mPullToRefreshLayout.setHeaderTextAnim(HeaderTextAnim.ZOOM);
-                break;
-        }
-        switch (menuBinding.spLoopAnim.getSelectedItemPosition()) {
-            case 0:
-                mPullToRefreshLayout.setHeaderLoopAnim(HeaderLoopAnim.ZOOM);
-                break;
-            case 1:
-                mPullToRefreshLayout.setHeaderLoopAnim(HeaderLoopAnim.FADE);
-                break;
-        }
-
-        mPullToRefreshLayout.setColorAnimEnable(menuBinding.swEnable.isChecked());
-
-        if (menuBinding.rbLight.isChecked()) {
-            mPullToRefreshLayout.setHeaderBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite));
-            mPullToRefreshLayout.setHeaderTextColor(ContextCompat.getColor(this, R.color.colorLabelDark));
-        } else if (menuBinding.rbDark.isChecked()) {
-            mPullToRefreshLayout.setHeaderBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-            mPullToRefreshLayout.setHeaderTextColor(ContextCompat.getColor(this, R.color.colorLabelLight));
-        }
-
-        mPullToRefreshLayout.setHeaderText(menuBinding.edtLabel.getText().toString());
+    when (menuBinding.spLoopAnim.selectedItemPosition) {
+      0 -> mPullToRefreshLayout.setHeaderLoopAnim(HeaderLoopAnim.ZOOM)
+      1 -> mPullToRefreshLayout.setHeaderLoopAnim(HeaderLoopAnim.FADE)
     }
-
-    @Override
-    public void onBackPressed() {
-        if (fabMenu.isShowing()) {
-            fabMenu.closeMenu();
-        } else {
-            super.onBackPressed();
-        }
+    mPullToRefreshLayout.setColorAnimEnable(menuBinding.swEnable.isChecked)
+    if (menuBinding.rbLight.isChecked) {
+      mPullToRefreshLayout.setHeaderBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
+      mPullToRefreshLayout.setHeaderTextColor(ContextCompat.getColor(this, R.color.colorLabelDark))
+    } else if (menuBinding.rbDark.isChecked) {
+      mPullToRefreshLayout.setHeaderBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+      mPullToRefreshLayout.setHeaderTextColor(ContextCompat.getColor(this, R.color.colorLabelLight))
     }
+    mPullToRefreshLayout.setHeaderText(menuBinding.edtLabel.text.toString())
+  }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+  override fun onBackPressed() {
+    if (fabMenu.isShowing) {
+      fabMenu.closeMenu()
+    } else {
+      super.onBackPressed()
     }
+  }
+
+  private fun hideKeyboard() {
+    val view = this.currentFocus
+    if (view != null) {
+      val imm = (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+      imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+  }
 }
